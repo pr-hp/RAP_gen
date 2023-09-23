@@ -4950,6 +4950,18 @@ CLASS zdmo_cl_rap_generator IMPLEMENTATION.
             ENDLOOP.
           ENDIF.
 
+          CLEAR log_entries.
+          log_entry-text = |Start publish service binding { root_node->rap_root_node_objects-service_binding }|.
+          log_entry-detaillevel = 1.
+          log_entry-severity = 'S'.
+          APPEND log_entry TO log_entries.
+
+          add_log_entries_for_rap_bo(
+            EXPORTING
+              i_rap_bo_name = rap_bo_name
+              i_log_entries = log_entries
+          ).
+
           DATA service_binding TYPE sxco_srvb_object_name.
           service_binding =  root_node->rap_root_node_objects-service_binding   .
           xco_api->publish_service_binding( service_binding ).
@@ -4970,6 +4982,16 @@ CLASS zdmo_cl_rap_generator IMPLEMENTATION.
 
         ENDIF.
 
+        CLEAR log_entries.
+        log_entry-text = |Generation finished|.
+        log_entry-detaillevel = 1.
+        log_entry-severity = 'S'.
+        APPEND log_entry TO log_entries.
+        add_log_entries_for_rap_bo(
+                    EXPORTING
+                      i_rap_bo_name = rap_bo_name
+                      i_log_entries = log_entries
+                  ).
       CATCH cx_xco_gen_put_exception INTO DATA(put_exception).
         put_exception_occured = abap_true.
         lo_findings = put_exception->findings.

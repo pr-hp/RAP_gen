@@ -2735,8 +2735,59 @@ CLASS lsc_ZDMO_R_RAPG_PROJECTTP IMPLEMENTATION.
     DATA(xco_lib) = NEW ZDMO_cl_rap_xco_on_prem_lib(  ).
 
     LOOP AT update-project INTO DATA(update_rapgeneratorbo)
-            WHERE ( BoIsGenerated = abap_true AND
-                    %control-BoIsGenerated = if_abap_behv=>mk-on ) OR
+              WHERE
+                    ( BoIsGenerated = abap_true AND
+                      %control-BoIsGenerated = if_abap_behv=>mk-on )
+*                    OR
+*                  ( BoIsDeleted = abap_true AND
+*                    %control-BoIsDeleted = if_abap_behv=>mk-on )
+                      .
+
+
+      DATA(bgpf_operation) = NEW zdmo_cl_rap_generator_bgpf(
+        i_json_string              = update_rapgeneratorbo-JsonString
+        i_package_language_version = update_rapgeneratorbo-PackageLanguageVersion
+        i_rap_bo_uuid = update_rapgeneratorbo-RapBoUUID
+      ).
+
+*      DATA(lo_parallel) = NEW cl_abap_parallel( ).
+*
+*      lo_parallel->run_inst(
+*        EXPORTING
+*          p_in_tab  = VALUE #( ( bgpf_operation ) )
+*        IMPORTING
+*          p_out_tab = DATA(lt_out)
+*      ).
+
+
+
+      TRY.
+
+          DATA background_process TYPE REF TO if_bgmc_process_single_op.
+          background_process = cl_bgmc_process_factory=>get_default(  )->create(  ).
+          background_process->set_operation_tx_uncontrolled( bgpf_operation ).
+          background_process->set_name( CONV #( |Generate { update_rapgeneratorbo-BoName }| ) ).
+          background_process->save_for_execution(  ).
+
+        CATCH cx_bgmc INTO DATA(exception).
+          "handle exception
+          DATA(latest_t100_exception) = cl_message_helper=>get_latest_t100_exception( exception ).
+          IF latest_t100_exception IS NOT INITIAL.
+            DATA(exception_text) = latest_t100_exception->if_message~get_text(  ).
+          ELSE.
+            exception_text = exception->get_text(  ).
+          ENDIF.
+
+      ENDTRY.
+
+    ENDLOOP.
+
+
+
+    LOOP AT update-project INTO update_rapgeneratorbo
+            WHERE
+*            ( BoIsGenerated = abap_true AND
+*                    %control-BoIsGenerated = if_abap_behv=>mk-on ) OR
                   ( BoIsDeleted = abap_true AND
                     %control-BoIsDeleted = if_abap_behv=>mk-on ) .
 

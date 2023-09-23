@@ -56,17 +56,21 @@ define root view entity ZDMO_C_RAPG_ProjectTP
            @EndUserText.label: 'Hide ADT Link'
            @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
   virtual  HideADTLink            : abap_boolean,
-           @EndUserText.label: 'Job Status'
-           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
-  virtual  JobStatus              : abap.char( 1 ),
-           @EndUserText.label: 'Generation'
-           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
-  virtual  JobStatusText          : abap.char( 20 ),
-           @EndUserText.label: 'Criticality'
-           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
-  virtual  JobStatusCriticality   : abap.int1,
+           //           @EndUserText.label: 'Job Status'
+           //           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
+           //  virtual  JobStatus              : abap.char( 1 ),
+           //           @EndUserText.label: 'Generation'
+           //           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
+           //  virtual  JobStatusText          : abap.char( 20 ),
+           //           @EndUserText.label: 'Criticality'
+           //           @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
+           //  virtual  JobStatusCriticality   : abap.int1,
+           JobStatus,
+           JobStatusCriticality,
+           JobStatusText,
            @EndUserText.label: 'Repository objects exist'
            @ObjectModel.virtualElementCalculatedBy: 'ABAP:ZDMO_CL_RAP_GEN_GET_JOB_STATUS'
+
   virtual  RepositoryObjectsExist : abap_boolean,
 
 

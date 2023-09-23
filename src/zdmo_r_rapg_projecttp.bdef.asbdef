@@ -42,7 +42,7 @@ authorization master ( global )
   //  field ( features : instance ) ADTLink;
   field ( features : instance ) MultiInlineEdit, CustomizingTable, AddToManageBusinessConfig;
 
-  field ( features : instance ) PublishService ;
+  field ( features : instance ) PublishService;
 
   field ( numbering : managed ) RapBoUUID;
 
@@ -127,6 +127,9 @@ authorization master ( global )
       hasSematicKey              = has_semantic_key;
       isExtensible               = is_extensible;
       extensibilityElementSuffix = extensibility_element_suffix;
+      JobStatus                  = job_status;
+      JobStatusCriticality       = job_status_criticality;
+      JobStatusText              = job_status_text;
     }
 
 
@@ -218,7 +221,7 @@ authorization dependent by _Project
   FieldNameLastChangedBy,
   FieldNameCreatedAt,
   FieldNameCreatedBy;
-//  ExtensionInclude;
+  //  ExtensionInclude;
 
 
 

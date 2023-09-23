@@ -103,7 +103,7 @@ ENDCLASS.
 
 
 
-CLASS zdmo_gen_rap630_single IMPLEMENTATION.
+CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -123,15 +123,14 @@ CLASS zdmo_gen_rap630_single IMPLEMENTATION.
   ENDMETHOD.
 
 
-
-
-
-
-
-
-
-
-
+  METHOD create_extension_package.
+    DATA(package_environment) = get_environment( lo_transport ).
+    DATA(lo_put_operation) = get_put_operation_for_devc( package_environment ).
+    DATA(lo_specification) = lo_put_operation->add_object( extension_package_name )->create_form_specification( ).
+    lo_specification->set_short_description( |#Generated { co_session_name }  extension tutorial package| ).
+    lo_specification->properties->set_super_package( co_extension_package )->set_software_component( co_extension_package ).
+    DATA(lo_result) = lo_put_operation->execute( ).
+  ENDMETHOD.
 
 
   METHOD create_package.
@@ -140,16 +139,6 @@ CLASS zdmo_gen_rap630_single IMPLEMENTATION.
     DATA(lo_specification) = lo_put_operation->add_object( package_name )->create_form_specification( ).
     lo_specification->set_short_description( |#Generated { co_session_name }  tutorial package| ).
     lo_specification->properties->set_super_package( co_zrap110_ex_package )->set_software_component( co_zlocal_package ).
-    DATA(lo_result) = lo_put_operation->execute( ).
-  ENDMETHOD.
-
-
-  METHOD create_extension_package.
-    DATA(package_environment) = get_environment( lo_transport ).
-    DATA(lo_put_operation) = get_put_operation_for_devc( package_environment ).
-    DATA(lo_specification) = lo_put_operation->add_object( extension_package_name )->create_form_specification( ).
-    lo_specification->set_short_description( |#Generated { co_session_name }  extension tutorial package| ).
-    lo_specification->properties->set_super_package( co_extension_package )->set_software_component( co_extension_package ).
     DATA(lo_result) = lo_put_operation->execute( ).
   ENDMETHOD.
 
@@ -192,11 +181,6 @@ CLASS zdmo_gen_rap630_single IMPLEMENTATION.
   ENDMETHOD.
 
 
-
-
-
-
-
   METHOD create_transport.
     DATA(ls_package) = xco_lib->get_package( co_zlocal_package ).
     IF ls_package->read( )-property-record_object_changes = abap_true.
@@ -207,17 +191,6 @@ CLASS zdmo_gen_rap630_single IMPLEMENTATION.
       lo_transport = lo_transport_request->value.
     ENDIF.
   ENDMETHOD.
-
-
-
-
-
-
-
-
-
-
-
 
 
   METHOD get_json_string.
@@ -410,8 +383,6 @@ CLASS zdmo_gen_rap630_single IMPLEMENTATION.
 .
 
   ENDMETHOD.
-
-
 
 
   METHOD get_unique_suffix.
