@@ -24,13 +24,13 @@ INHERITING FROM zdmo_cl_rap_generator_base
 
 
     CONSTANTS:
-      co_prefix             TYPE string           VALUE 'ZRAP630_',
-      co_entity_name        TYPE string           VALUE 'Shop',
-      co_session_name       TYPE string           VALUE 'RAP630',
-      co_zlocal_package     TYPE sxco_package     VALUE 'Z_D041615_BASE' , "VALUE 'ZLOCAL',
-      co_extension_package  TYPE sxco_package     VALUE 'Z_D041615_EXT1',
-      co_zrap110_ex_package TYPE sxco_package     VALUE 'Z_D041615_BASE' . " VALUE 'ZLOCAL'.
-*      co_zrap110_ex_package TYPE sxco_package VALUE 'ZRAP110_DRYRUN'.
+      co_prefix                     TYPE string           VALUE 'ZRAP630_',
+      co_entity_name                TYPE string           VALUE 'Shop',
+      co_session_name               TYPE string           VALUE 'RAP630',
+      co_software_component_base_bo TYPE sxco_package     VALUE 'ZLOCAL',
+      co_software_component_ext_bo  TYPE sxco_package     VALUE 'ZLOCAL'.
+
+
 
 
 
@@ -103,7 +103,7 @@ ENDCLASS.
 
 
 
-CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
+CLASS zdmo_gen_rap630_single IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -128,7 +128,7 @@ CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
     DATA(lo_put_operation) = get_put_operation_for_devc( package_environment ).
     DATA(lo_specification) = lo_put_operation->add_object( extension_package_name )->create_form_specification( ).
     lo_specification->set_short_description( |#Generated { co_session_name }  extension tutorial package| ).
-    lo_specification->properties->set_super_package( co_extension_package )->set_software_component( co_extension_package ).
+    lo_specification->properties->set_super_package( co_software_component_ext_bo )->set_software_component( co_software_component_ext_bo ).
     DATA(lo_result) = lo_put_operation->execute( ).
   ENDMETHOD.
 
@@ -138,7 +138,7 @@ CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
     DATA(lo_put_operation) = get_put_operation_for_devc( package_environment ).
     DATA(lo_specification) = lo_put_operation->add_object( package_name )->create_form_specification( ).
     lo_specification->set_short_description( |#Generated { co_session_name }  tutorial package| ).
-    lo_specification->properties->set_super_package( co_zrap110_ex_package )->set_software_component( co_zlocal_package ).
+    lo_specification->properties->set_super_package( co_software_component_base_bo )->set_software_component( co_software_component_base_bo ).
     DATA(lo_result) = lo_put_operation->execute( ).
   ENDMETHOD.
 
@@ -182,7 +182,7 @@ CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
 
 
   METHOD create_transport.
-    DATA(ls_package) = xco_lib->get_package( co_zlocal_package ).
+    DATA(ls_package) = xco_lib->get_package( co_software_component_base_bo ).
     IF ls_package->read( )-property-record_object_changes = abap_true.
 *    DATA(ls_package) = xco_cp_abap_repository=>package->for( co_zlocal_package )->read( ).
       DATA(lv_transport_layer) = ls_package->read( )-property-transport_layer->value.
@@ -279,6 +279,14 @@ CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
 '            "builtintype": "CHAR",' && |\r\n|  &&
 '            "builtintypelength": 10,' && |\r\n|  &&
 '            "cdsviewfieldname": "OrderID"' && |\r\n|  &&
+'        },' && |\r\n|  &&
+
+'         {' && |\r\n|  &&
+'            "abapfieldname": "ORDERED_ITEM",' && |\r\n|  &&
+'            "isbuiltintype": true,' && |\r\n|  &&
+'            "builtintype": "CHAR",' && |\r\n|  &&
+'            "builtintypelength": 40,' && |\r\n|  &&
+'            "cdsviewfieldname": "OrderedItem"' && |\r\n|  &&
 '        },' && |\r\n|  &&
 
 '        {' && |\r\n|  &&
@@ -387,10 +395,10 @@ CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
 
   METHOD get_unique_suffix.
 
-    DATA: ls_package_name        TYPE sxco_package,
+    DATA: ls_package_name  TYPE sxco_package,
 
-          is_valid_package       TYPE abap_bool,
-          step_number            TYPE i.
+          is_valid_package TYPE abap_bool,
+          step_number      TYPE i.
 
     DATA: ascii_hex TYPE x LENGTH 3.
     DATA ascii_hex_string TYPE string.
@@ -437,14 +445,14 @@ CLASS ZDMO_GEN_RAP630_SINGLE IMPLEMENTATION.
     package_name           = co_prefix && unique_suffix.
     extension_package_name = package_name && '_EXT' .
 
-    DATA(lo_transport_target) = xco_lib->get_package( co_zrap110_ex_package
+    DATA(lo_transport_target) = xco_lib->get_package( co_software_component_base_bo
               )->read( )-property-transport_layer->get_transport_target( ).
 
     DATA(new_transport_object) = xco_cp_cts=>transports->workbench( lo_transport_target->value  )->create_request( |Package name: { package_name } | ).
     transport = new_transport_object->value.
 
 
-    DATA(lo_transport_target_ext) = xco_lib->get_package( co_extension_package
+    DATA(lo_transport_target_ext) = xco_lib->get_package( co_software_component_ext_bo
               )->read( )-property-transport_layer->get_transport_target( ).
 
     DATA(new_transport_object_ext) = xco_cp_cts=>transports->workbench( lo_transport_target_ext->value  )->create_request( |Package name: { extension_package_name } | ).
