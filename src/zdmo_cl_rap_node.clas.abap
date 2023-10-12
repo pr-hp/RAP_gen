@@ -1152,7 +1152,7 @@ ENDCLASS.
 
 
 
-CLASS ZDMO_CL_RAP_NODE IMPLEMENTATION.
+CLASS zdmo_cl_rap_node IMPLEMENTATION.
 
 
   METHOD add_additional_fields.
@@ -2158,6 +2158,12 @@ CLASS ZDMO_CL_RAP_NODE IMPLEMENTATION.
     "add additional checks from methods add_valuehelp( ), set_semantic_key_fields( ) and ADD ASSOCIATION( )
 
     add_valuehelp_for_language(  ).
+
+    LOOP AT lt_valuehelp INTO DATA(value_help).
+      LOOP AT lt_fields  ASSIGNING FIELD-SYMBOL(<field_wo_value_help>) WHERE cds_view_field = value_help-localelement.
+        <field_wo_value_help>-has_valuehelp = abap_true.
+      ENDLOOP.
+    ENDLOOP.
 
     "hide administrative fields
     "hide guid based fields
